@@ -14,35 +14,50 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
 /**
  * 鉴权
+ * 
  * @author soap
  *
  */
 public class SignatureAndVerifyUtil {
 
 	/**
-	 * 进行签名
-	 * 
-	 * @param sign_string
-	 * @param  传入的用户私钥
-	 *            参与签名的文本
-	 * 
-	 **/
-	public static String Signature(String pkPath,String sign_string) {
+	 * 读取用户私钥
+	 * @param privateKeyPath 私钥文件路径
+	 * @return
+	 */
+	public static PrivateKey readPrivateKey(String privateKeyPath) {
+		// 读取你的密钥pkcs8_private_key.pem
+		File private_key_pem = new File(privateKeyPath);
+		PrivateKey privateKey = null;
 		try {
-			// 读取你的密钥pkcs8_private_key.pem
-			File private_key_pem = new File(pkPath);
 			InputStream inPrivate = new FileInputStream(private_key_pem);
+
 			String privateKeyStr = readKey(inPrivate);
 			byte[] buffer = Base64Util.decode(privateKeyStr);
 			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(buffer);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
 			// 获取密钥对象
-			PrivateKey privateKey = (RSAPrivateKey) keyFactory
-					.generatePrivate(keySpec);
+			privateKey = (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return privateKey;
+	}
 
+	/**
+	 * 进行签名
+	 * 
+	 * @param sign_string
+	 * @param 传入的用户私钥
+	 *            参与签名的文本
+	 * 
+	 **/
+	public static String Signature(PrivateKey privateKey, String sign_string) {
+		try {
 			// 用私钥对信息生成数字签名
 			Signature signer = Signature.getInstance("SHA256WithRSA");
 			signer.initSign(privateKey);
@@ -72,8 +87,7 @@ public class SignatureAndVerifyUtil {
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
 			// 获取公钥匙对象
-			PublicKey pubKey = (RSAPublicKey) keyFactory
-					.generatePublic(keySpec);
+			PublicKey pubKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
 
 			Signature signer = Signature.getInstance("SHA256WithRSA");
 			signer.initVerify(pubKey);
