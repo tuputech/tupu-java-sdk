@@ -17,19 +17,14 @@ public class APITest {
 		// fileList imageFile or url
 		ArrayList<String> fileList = new ArrayList<String>();
 		// tags
-		String tags[] = { "1111111", "222222" };
-		fileList.add("pem/1.png");
-		fileList.add("pem/2.jpg");
-		fileList.add("pem/4.png");
-		fileList.add("pem/3.jpg");
-		fileList.add("pem/5.png");
-		fileList.add("pem/7.png");
-		fileList.add("pem/6.png");
-		fileList.add("pem/test.jpg");
+		String tags[] = { "tag1", "tag2" };
+		
+		fileList.add("../test1.jpg");
+		fileList.add("../test2.jpg");
 
 		Api api = new Api(secretId, privateKey);
 
-		JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE, fileList);
+		JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE, fileList,tags);
 
 		System.out.println(result);
 	}
