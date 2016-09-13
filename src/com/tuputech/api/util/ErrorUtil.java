@@ -43,6 +43,8 @@ public class ErrorUtil {
 	public final static int ERROR_CODE_UNKNOWN_ERROR = 101;
 	//102:结果验证失败
 	public final static int ERROR_CODE_RESULT_VERIFY_FAILED = 102;
+	//103:其他异常
+	public final static int ERROR_CODE_OTHERS = 103;
 	public static JSONObject getErrorMsg(int errCode, String errMsg) {
 		JSONObject obj = new JSONObject();
 		switch (errCode) {
@@ -106,6 +108,7 @@ public class ErrorUtil {
 		case ERROR_CODE_RESULT_VERIFY_FAILED:
 			errMsg = "response verify failed";
 			break;
+		case ERROR_CODE_OTHERS:
 		default:
 			if (null == errMsg ||errMsg == "") {
 				errMsg ="unknown error";

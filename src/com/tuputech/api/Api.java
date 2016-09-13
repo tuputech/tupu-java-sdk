@@ -83,11 +83,11 @@ public class Api {
 				}
 			} else {
 				System.out.println("TUPU API: response verify failed, total time" + time + "s");
-				return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_UNKNOWN_ERROR, "");
+				return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_OTHERS, "");
 			}
 		} catch (Exception e) {
 			System.out.println("TUPU API: response verify failed, total time" + time + "s");
-			return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_UNKNOWN_ERROR, e.getMessage());
+			return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_OTHERS, e.getMessage());
 		}
 	}
 }
