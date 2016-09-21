@@ -11,6 +11,24 @@
 - 请联系图普售前/客户支持，明确需求，以便申请账户、申请开通secretId；
 - 登录后，<a href="https://www.tuputech.com/account/cert">参考此说明</a>生成并上传公钥；
 
+###目录介绍
+````
+examples/  				 
+		libs/tupuApi.jar   //图普 API SDK ,已集成json 解析 jar
+        src/com/soap/api/APITest.java  //调用示例
+        
+libs/					 //json 解析jar
+	commons-beanutils-1.8.0.jar
+	commons-collections-3.2.1.jar
+	commons-lang-2.5.jar
+	commons-logging-1.2.jar
+	ezmorph-1.0.6.jar
+	json-lib-2.4-jdk15.jar
+    
+src/					
+	com/tuputech/api				     // SDK 源码
+	open_tuputech_com_public_key.pem	//图普公钥,验证返回结果
+````
 ###API调用示例
 ```java
 public class APITest {
