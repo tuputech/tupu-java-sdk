@@ -98,7 +98,7 @@ public class HttpConnectionUtil {
 			dos.writeBytes(PREFIX + BOUNDARY + END);
 			dos.writeBytes("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" + fileLists.get(i)
 					+ "\"" + END);
-			dos.writeBytes("Content-Type:image/pjpeg" + END);
+//			dos.writeBytes("Content-Type:image/pjpeg" + END);
 			dos.writeBytes(END);
 			FileInputStream fStream = new FileInputStream(uploadFile);
 			int bufferSize = 1024;
@@ -111,7 +111,7 @@ public class HttpConnectionUtil {
 			fStream.close();
 		}
 
-		dos.write(END.getBytes());
+//		dos.write(END.getBytes());
 		byte[] end_data = (PREFIX + BOUNDARY + PREFIX + END).getBytes();
 		dos.write(end_data);
 		dos.flush();
