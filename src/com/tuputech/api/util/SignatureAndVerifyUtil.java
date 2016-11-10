@@ -1,6 +1,7 @@
 package com.tuputech.api.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,9 +24,17 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class SignatureAndVerifyUtil {
 
+	private static String publickKeyString = "-----BEGIN PUBLIC KEY-----" + "\n"
+			+ "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDyZneSY2eGnhKrArxaT6zswVH9" + "\n"
+			+ "/EKz+CLD+38kJigWj5UaRB6dDUK9BR6YIv0M9vVQZED2650tVhS3BeX04vEFhThn" + "\n"
+			+ "NrJguVPidufFpEh3AgdYDzOQxi06AN+CGzOXPaigTurBxZDIbdU+zmtr6a8bIBBj" + "\n" + "WQ4v2JR/BA6gVHV5TwIDAQAB"
+			+ "\n" + "-----END PUBLIC KEY-----";
+
 	/**
 	 * 读取用户私钥
-	 * @param privateKeyPath 私钥文件路径
+	 * 
+	 * @param privateKeyPath
+	 *            私钥文件路径
 	 * @return
 	 */
 	public static PrivateKey readPrivateKey(String privateKeyPath) {
@@ -80,18 +89,17 @@ public class SignatureAndVerifyUtil {
 	 **/
 	public static boolean Verify(String signature, String json) {
 		try {
-			// 读取图普公钥open_tuputech_com_public_key.pem
-			InputStream inPublic = ClassLoader.getSystemResourceAsStream(ConfigUtil.PUBLIC_TUPU_KEY_PATH);
+
+			InputStream inPublic = new ByteArrayInputStream(publickKeyString.getBytes("UTF-8"));
 			String publicKeyStr = readKey(inPublic);
 			byte[] buffer = Base64Util.decode(publicKeyStr);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
 			// 获取公钥匙对象
 			PublicKey pubKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
-
 			Signature signer = Signature.getInstance("SHA256WithRSA");
 			signer.initVerify(pubKey);
-			signer.update(json.getBytes());
+			signer.update(json.getBytes("UTF-8"));
 			// 验证签名是否正常
 			return signer.verify(Base64Util.decode(signature));
 		} catch (Exception e) {
