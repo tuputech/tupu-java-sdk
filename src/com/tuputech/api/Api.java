@@ -25,9 +25,9 @@ public class Api {
 	 * @param pkPath
 	 *            用户私钥
 	 */
-	public Api(String secretId, String pkPath) {
+	public Api(String secretId, String pkPath,String requestUrl) {
 		this.secretId = secretId;
-		this.url = ConfigUtil.NET_WORK.API_URI + secretId;
+		this.url = requestUrl + secretId;
 		this.privateKey = SignatureAndVerifyUtil.readPrivateKey(pkPath);
 	}
 
