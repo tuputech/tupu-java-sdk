@@ -38,6 +38,8 @@ public class APITest {
 		String secretId = "";
 		// private KEY path
 		String privateKey = "";
+		// request Url
+		String requestUrl = "http://api.open.tuputech.com/v3/recognition/";
 		// fileList imageFile or url
 		ArrayList<String> fileList = new ArrayList<String>();
 		// tags
@@ -49,8 +51,10 @@ public class APITest {
     	 *            用户secretId
     	 * @param pkPath
     	 *            用户私钥路径
-  	   */
-		Api api = new Api(secretId, privateKey);
+	 * @param requestUrl
+	 *            请求接口地址
+  	 */
+		Api api = new Api(secretId, privateKey,requestUrl);
       /**
     	 * @param fileType
     	 *            传入的数据类型，ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE为本地文件
@@ -68,10 +72,11 @@ public class APITest {
 #API说明
 ###construct a TUPU API instance
 ```java
-Api api = new Api(secretId, privateKey);
+Api api = new Api(secretId, privateKey,reuestUrl);
 ```
 - `secretId`Type:String,your secretId, contact us to apply your own secretId
 - `privateKeyPath` Type:String, /path/to/your/private/key.pem
+- `reuestUrl` Type:String, default:"http://api.open.tuputech.com/v3/recognition/"
 
 ```java
 JSONObject result = api.doApiTest(fileType,fileList,tags)
