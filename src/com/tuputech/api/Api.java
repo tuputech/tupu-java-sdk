@@ -1,5 +1,6 @@
 package com.tuputech.api;
 
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 
@@ -25,7 +26,10 @@ public class Api {
 	 * @param pkPath
 	 *            用户私钥
 	 */
-	public Api(String secretId, String pkPath,String requestUrl) {
+	public Api(String secretId, String pkPath, String requestUrl) {
+		if (null == requestUrl) {
+			requestUrl = "http://api.open.tuputech.com/v3/recognition/";
+		}
 		this.secretId = secretId;
 		this.url = requestUrl + secretId;
 		this.privateKey = SignatureAndVerifyUtil.readPrivateKey(pkPath);
@@ -65,15 +69,19 @@ public class Api {
 			} else if (fileType == ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE) {
 				result = HttpConnectionUtil.uploadUri(url, timestamp, nonce, signature, fileLists, tags);
 			}
-
 			if (result != null && !result.equals("err")) {
+				// 判断当前字符串的编码格式
+				if (result.equals(new String(result.getBytes("iso8859-1"), "iso8859-1"))) {
+					result = new String(result.getBytes("iso8859-1"), "utf-8");
+				}
 				JSONObject jsonObject = JSONObject.fromObject(result);
 				String result_json = jsonObject.getString("json");
 				String result_signature = jsonObject.getString("signature");
+
 				// 进行验证
 				boolean verify = SignatureAndVerifyUtil.Verify(result_signature, result_json);
 				endTime = System.currentTimeMillis();
-				time = (float)(endTime - startTime) / (float)1000;
+				time = (float) (endTime - startTime) / (float) 1000;
 				if (verify) {
 					System.out.println("TUPU API: response verify succeed, total time" + time + "s");
 					return JSONObject.fromObject(result_json);

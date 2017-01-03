@@ -44,11 +44,7 @@ public class HttpConnectionUtil {
 		param.put("timestamp", timestamp);
 		param.put("signature", signature);
 		param.put("nonce", nonce);
-		if (tags != null && tags.length > 0) {
-			for (int i = 0; i < tags.length; i++) {
-				param.put("tag", tags[i]);
-			}
-		}
+	
 
 		final String PREFIX = "--";
 		final String END = "\r\n";
@@ -89,17 +85,30 @@ public class HttpConnectionUtil {
 						.append(END);
 				stringBuffer.append(value).append(END);
 				params = stringBuffer.toString();
-				dos.write(params.getBytes());
+				dos.write(params.getBytes("UTF-8"));
+			}
+			if (tags != null && tags.length > 0) {
+				for (int i = 0; i < tags.length; i++) {
+					stringBuffer = null;
+					stringBuffer = new StringBuffer();
+					String value = tags[i];
+					stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
+					stringBuffer.append("Content-Disposition: form-data; name=\"").append("tag").append("\"").append(END)
+							.append(END);
+					stringBuffer.append(value).append(END);
+					params = stringBuffer.toString();
+					dos.write(params.getBytes("UTF-8"));
+				}
 			}
 		}
 		for (int i = 0; i < fileLists.size(); i++) {
 
 			String uploadFile = fileLists.get(i);
-			dos.writeBytes(PREFIX + BOUNDARY + END);
-			dos.writeBytes("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" + fileLists.get(i)
-					+ "\"" + END);
-//			dos.writeBytes("Content-Type:image/pjpeg" + END);
-			dos.writeBytes(END);
+			dos.write((PREFIX + BOUNDARY + END).getBytes("UTF-8"));
+			dos.write(("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" +fileLists.get(i)
+					+ "\"" + END).getBytes("UTF-8"));
+
+			dos.write(END.getBytes("UTF-8"));
 			FileInputStream fStream = new FileInputStream(uploadFile);
 			int bufferSize = 1024;
 			byte[] buffer = new byte[bufferSize];
@@ -111,8 +120,7 @@ public class HttpConnectionUtil {
 			fStream.close();
 		}
 
-//		dos.write(END.getBytes());
-		byte[] end_data = (PREFIX + BOUNDARY + PREFIX + END).getBytes();
+		byte[] end_data = (PREFIX + BOUNDARY + PREFIX + END).getBytes("UTF-8");
 		dos.write(end_data);
 		dos.flush();
 		int res = conn.getResponseCode();
@@ -124,7 +132,6 @@ public class HttpConnectionUtil {
 				sb1.append((char) ss);
 			}
 			result = sb1.toString();
-
 		}
 		return result;
 	}
