@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+import com.tuputech.api.model.ClassificationResult;
+
 /**
  * Created by soap on 16/7/4. 上传文件并返回结果
  */
@@ -36,7 +38,7 @@ public class HttpConnectionUtil {
 	 *            上传文件
 	 * @return
 	 */
-	public static String uploadImage(String actionUrl, String secretId, String timestamp, String nonce,
+	public static ClassificationResult uploadImage(String actionUrl, String secretId, String timestamp, String nonce,
 			String signature, ArrayList<String> fileLists, String tags[]) throws Exception {
 		String BOUNDARY = UUID.randomUUID().toString();
 		Map<String, String> param = new HashMap<String, String>();
@@ -131,9 +133,11 @@ public class HttpConnectionUtil {
 			while ((ss = input.read()) != -1) {
 				sb1.append((char) ss);
 			}
-			result = sb1.toString();
+			 
+			result  = sb1.toString();
 		}
-		return result;
+		return new ClassificationResult(res, result);
+		
 	}
 
 	/**
@@ -150,7 +154,7 @@ public class HttpConnectionUtil {
 	 *            文件url 列表
 	 * @return
 	 */
-	public static String uploadUri(String actionUrl, String timestamp, String nonce, String signature,
+	public static ClassificationResult uploadUri(String actionUrl, String timestamp, String nonce, String signature,
 			ArrayList<String> fileLists, String tags[]) throws Exception {
 		BufferedReader reader = null;
 		String result = null;
@@ -184,7 +188,6 @@ public class HttpConnectionUtil {
 			sbf.append("\r\n");
 		}
 		reader.close();
-		result = sbf.toString();
-		return result;
+		return new ClassificationResult(connection.getResponseCode(), sbf.toString());
 	}
 }

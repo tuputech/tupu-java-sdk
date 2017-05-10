@@ -94,7 +94,7 @@ public class ErrorUtil {
 			errMsg = "files formats error";
 			break;
 		case ERROR_CODE_NOT_FOUND:
-			errMsg = "files not found";
+			errMsg = "addr is error";
 			break;
 		case ERROR_CODE_DOWNLOAD_FAILED:
 			errMsg = "files download failed";
