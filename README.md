@@ -66,7 +66,7 @@ public class APITest {
     	 * @param fileLists
     	 *            文件集合(本地文件路径或者 Url)
     	 * @param options
-    	 *			  可选参数
+    	 *            可选参数
     	 *            tags: 用于给图片附加额外信息（比如：直播客户可能传房间号，或者主播ID信息）。方便后续根据tag搜索到相关的图片
 	 	 *            uid: 作为第三方客户标识
     	 * @return
@@ -89,9 +89,9 @@ JSONObject result = api.doApiTest(fileType,fileList,options)
 ```
 - `fileType` Type:String, ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE or ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE
 - `fileList` Type:ArrayList<String>,images path or urls list
-- `options`  Type:Object, optional param
-			 tags: [ 'tag1', 'tag2' ] tag of image (optional); string value as general tag for all files; if count of tags is less than 					count of files, the last tag will be used for the rest
-			 uid: as third party customer identification
+- `options`  Type:Object, optional param.
+			 tags: [ 'tag1', 'tag2' ] tag of image (optional); string value as general tag for all files; if count of tags is less than 					count of files, the last tag will be used for the rest.
+			 uid: as third party customer identification.
 
 
 
