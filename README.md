@@ -41,49 +41,57 @@ public class APITest {
 		// request Url
 		String requestUrl = "http://api.open.tuputech.com/v3/recognition/";
 		// fileList imageFile or url
-		ArrayList<String> fileList = new ArrayList<String>();
+		ArrayList<String> fileLists = new ArrayList<String>();
 		// tags
 		String tags[] = { "tag1", "tag2" };
-		fileList.add("../test1.jpg");
-		fileList.add("../test2.jpg");
+		fileLists.add("../test1.jpg");
+		fileLists.add("../test2.jpg");
+		// options
+		Options options = new Options();
+		options.setTags(tags);
+		// options.setUid("your_uid"); // 第三方客户标识
       /**
     	 * @param secretId
     	 *            用户secretId
-    	 * @param pkPath
+    	 * @param privateKey
     	 *            用户私钥路径
 	 * @param requestUrl
 	 *            请求接口地址
   	 */
-		Api api = new Api(secretId, privateKey,requestUrl);
+		Api api = new Api(secretId, privateKey, requestUrl);
       /**
     	 * @param fileType
     	 *            传入的数据类型，ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE为本地文件
     	 *            ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE 为图片 Url
     	 * @param fileLists
     	 *            文件集合(本地文件路径或者 Url)
-    	 * @param tags
-    	 *            [可选] 用于给图片附加额外信息（比如：直播客户可能传房间号，或者主播ID信息）。方便后续根据tag搜索到相关的图片
+    	 * @param options
+    	 *			  可选参数
+    	 *            tags: 用于给图片附加额外信息（比如：直播客户可能传房间号，或者主播ID信息）。方便后续根据tag搜索到相关的图片
+	 	 *            uid: 作为第三方客户标识
     	 * @return
     	 */
-		JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE, fileList,tags);
+		JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE, fileLists, options);
 	}
 }
 ```
 #API说明
 ###construct a TUPU API instance
 ```java
-Api api = new Api(secretId, privateKey,reuestUrl);
+Api api = new Api(secretId, privateKey, requestUrl);
 ```
 - `secretId`Type:String,your secretId, contact us to apply your own secretId
 - `privateKeyPath` Type:String, /path/to/your/private/key.pem
-- `reuestUrl` Type:String, default:"http://api.open.tuputech.com/v3/recognition/"
+- `requestUrl` Type:String, default:"http://api.open.tuputech.com/v3/recognition/"
 
 ```java
-JSONObject result = api.doApiTest(fileType,fileList,tags)
+JSONObject result = api.doApiTest(fileType,fileList,options)
 ```
 - `fileType` Type:String, ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE or ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE
 - `fileList` Type:ArrayList<String>,images path or urls list
-- `tags`  [ 'tag1', 'tag2' ] tag of image (optional); string value as general tag for all files; if count of tags is less than count of files, the last tag will be used for the rest
+- `options`  Type:Object, optional param
+			 tags: [ 'tag1', 'tag2' ] tag of image (optional); string value as general tag for all files; if count of tags is less than 					count of files, the last tag will be used for the rest
+			 uid: as third party customer identification
 
 
 

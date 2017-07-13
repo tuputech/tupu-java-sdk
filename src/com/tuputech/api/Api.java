@@ -45,8 +45,10 @@ public class Api {
 	 *            ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE 为图片 Url
 	 * @param fileLists
 	 *            文件集合
-	 * @param tags
-	 *            [可选] 用于给图片附加额外信息（比如：直播客户可能传房间号，或者主播ID信息）。方便后续根据tag搜索到相关的图片
+	 * @param options
+	 *            [可选] 
+	 *            tags: 用于给图片附加额外信息（比如：直播客户可能传房间号，或者主播ID信息）。方便后续根据tag搜索到相关的图片
+	 *            uid: 作为第三方客户标识
 	 * 
 	 * @return
 	 */
