@@ -45,7 +45,6 @@ public class SignatureAndVerifyUtil {
 			InputStream inPrivate = new FileInputStream(private_key_pem);
 
 			String privateKeyStr = readKey(inPrivate);
-			System.out.println(privateKeyStr);
 			byte[] buffer = Base64Util.decode(privateKeyStr);
 			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(buffer);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
