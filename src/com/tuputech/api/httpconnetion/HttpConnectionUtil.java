@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.tuputech.api.model.ClassificationResult;
+import com.tuputech.api.model.Options;
 
 /**
  * Created by soap on 16/7/4. 上传文件并返回结果
@@ -39,15 +40,18 @@ public class HttpConnectionUtil {
 	 * @return
 	 */
 	public static ClassificationResult uploadImage(String actionUrl, String secretId, String timestamp, String nonce,
-			String signature, ArrayList<String> fileLists, String tags[]) throws Exception {
+			String signature, ArrayList<String> fileLists, Options options) throws Exception {
 		String BOUNDARY = UUID.randomUUID().toString();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("secretId", secretId);
 		param.put("timestamp", timestamp);
 		param.put("signature", signature);
 		param.put("nonce", nonce);
-	
+		if (null != options.getUid()) {
+			param.put("uid", options.getUid());
+		}
 
+		String[] tags = options.getTags();
 		final String PREFIX = "--";
 		final String END = "\r\n";
 		final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
@@ -95,8 +99,8 @@ public class HttpConnectionUtil {
 					stringBuffer = new StringBuffer();
 					String value = tags[i];
 					stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
-					stringBuffer.append("Content-Disposition: form-data; name=\"").append("tag").append("\"").append(END)
-							.append(END);
+					stringBuffer.append("Content-Disposition: form-data; name=\"").append("tag").append("\"")
+							.append(END).append(END);
 					stringBuffer.append(value).append(END);
 					params = stringBuffer.toString();
 					dos.write(params.getBytes("UTF-8"));
@@ -107,8 +111,8 @@ public class HttpConnectionUtil {
 
 			String uploadFile = fileLists.get(i);
 			dos.write((PREFIX + BOUNDARY + END).getBytes("UTF-8"));
-			dos.write(("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" +fileLists.get(i)
-					+ "\"" + END).getBytes("UTF-8"));
+			dos.write(("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" + fileLists.get(i) + "\""
+					+ END).getBytes("UTF-8"));
 
 			dos.write(END.getBytes("UTF-8"));
 			FileInputStream fStream = new FileInputStream(uploadFile);
@@ -133,11 +137,11 @@ public class HttpConnectionUtil {
 			while ((ss = input.read()) != -1) {
 				sb1.append((char) ss);
 			}
-			 
-			result  = sb1.toString();
+
+			result = sb1.toString();
 		}
 		return new ClassificationResult(res, result);
-		
+
 	}
 
 	/**
@@ -155,11 +159,16 @@ public class HttpConnectionUtil {
 	 * @return
 	 */
 	public static ClassificationResult uploadUri(String actionUrl, String timestamp, String nonce, String signature,
-			ArrayList<String> fileLists, String tags[]) throws Exception {
+			ArrayList<String> fileLists, Options options) throws Exception {
 		BufferedReader reader = null;
 		String result = null;
 		StringBuffer sbf = new StringBuffer();
 		String httpArg = "timestamp=" + timestamp + "&nonce=" + nonce + "&signature=" + URLEncoder.encode(signature);
+				
+		if (null != options.getUid()) {
+			httpArg = httpArg + "&uid=" + options.getUid();
+		}
+		String[] tags = options.getTags();
 		if (tags != null && tags.length > 0) {
 			for (int i = 0; i < tags.length; i++) {
 				httpArg += "&tag=" + tags[i];

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.tuputech.api.httpconnetion.HttpConnectionUtil;
 import com.tuputech.api.model.ClassificationResult;
+import com.tuputech.api.model.Options;
 import com.tuputech.api.util.ConfigUtil;
 import com.tuputech.api.util.ErrorUtil;
 import com.tuputech.api.util.SignatureAndVerifyUtil;
@@ -34,6 +35,7 @@ public class Api {
 		this.secretId = secretId;
 		this.url = requestUrl + secretId;
 		this.privateKey = SignatureAndVerifyUtil.readPrivateKey(pkPath);
+
 	}
 
 	/**
@@ -48,7 +50,7 @@ public class Api {
 	 * 
 	 * @return
 	 */
-	public JSONObject doApiTest(String fileType, ArrayList<String> fileLists, String... tags) {
+	public JSONObject doApiTest(String fileType, ArrayList<String> fileLists, Options options) {
 		if (fileLists == null || fileLists.isEmpty()) {
 			return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
 		}
@@ -67,10 +69,12 @@ public class Api {
 			// 得到签名
 			if (fileType == ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE) {
 				classificationResult = HttpConnectionUtil.uploadImage(url, secretId, timestamp, nonce, signature,
-						fileLists, tags);
+						fileLists, options);
 			} else if (fileType == ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE) {
-				classificationResult = HttpConnectionUtil.uploadUri(url, timestamp, nonce, signature, fileLists, tags);
+				classificationResult = HttpConnectionUtil.uploadUri(url, timestamp, nonce, signature, fileLists,
+						options);
 			}
+			
 			if (classificationResult.getResultCode() == 200) {
 				String result = classificationResult.getResult();
 				// 判断当前字符串的编码格式
