@@ -3,8 +3,10 @@ package com.tuputech.api.httpconnetion;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -39,8 +41,9 @@ public class HttpConnectionUtil {
 	 *            上传文件
 	 * @return
 	 */
-	public static ClassificationResult uploadImage(String actionUrl, String secretId, String timestamp, String nonce,
-			String signature, ArrayList<String> fileLists, Options options) throws Exception {
+	public static ClassificationResult uploadImage(String actionUrl,
+			String secretId, String timestamp, String nonce, String signature,
+			ArrayList<String> fileLists, Options options) throws Exception {
 		String BOUNDARY = UUID.randomUUID().toString();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("secretId", secretId);
@@ -52,6 +55,7 @@ public class HttpConnectionUtil {
 		}
 
 		String[] tags = options.getTags();
+		String[] CIDs = options.getCIDs();
 		final String PREFIX = "--";
 		final String END = "\r\n";
 		final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
@@ -66,8 +70,10 @@ public class HttpConnectionUtil {
 		conn.setRequestMethod("POST"); // 请求方式
 		conn.setRequestProperty("Charset", "UTF-8"); // 设置编码
 		conn.setRequestProperty("connection", "keep-alive");
-		conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
-		conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+		conn.setRequestProperty("user-agent",
+				"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+		conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="
+				+ BOUNDARY);
 
 		/**
 		 * 当文件不为空，把文件包装并且上传
@@ -87,32 +93,23 @@ public class HttpConnectionUtil {
 				String key = it.next();
 				String value = param.get(key);
 				stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
-				stringBuffer.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append(END)
-						.append(END);
+				stringBuffer.append("Content-Disposition: form-data; name=\"")
+						.append(key).append("\"").append(END).append(END);
 				stringBuffer.append(value).append(END);
 				params = stringBuffer.toString();
 				dos.write(params.getBytes("UTF-8"));
 			}
-			if (tags != null && tags.length > 0) {
-				for (int i = 0; i < tags.length; i++) {
-					stringBuffer = null;
-					stringBuffer = new StringBuffer();
-					String value = tags[i];
-					stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
-					stringBuffer.append("Content-Disposition: form-data; name=\"").append("tag").append("\"")
-							.append(END).append(END);
-					stringBuffer.append(value).append(END);
-					params = stringBuffer.toString();
-					dos.write(params.getBytes("UTF-8"));
-				}
-			}
+			joinValues(tags, "tag", BOUNDARY, params, dos);
+			joinValues(CIDs, "CID", BOUNDARY, params, dos);
+
 		}
 		for (int i = 0; i < fileLists.size(); i++) {
 
 			String uploadFile = fileLists.get(i);
 			dos.write((PREFIX + BOUNDARY + END).getBytes("UTF-8"));
-			dos.write(("Content-Disposition:form-data; name=\"" + "image" + "\"; filename=\"" + fileLists.get(i) + "\""
-					+ END).getBytes("UTF-8"));
+			dos.write(("Content-Disposition:form-data; name=\"" + "image"
+					+ "\"; filename=\"" + fileLists.get(i) + "\"" + END)
+					.getBytes("UTF-8"));
 
 			dos.write(END.getBytes("UTF-8"));
 			FileInputStream fStream = new FileInputStream(uploadFile);
@@ -145,6 +142,44 @@ public class HttpConnectionUtil {
 	}
 
 	/**
+	 * 
+	 * @param values
+	 * @param valueName
+	 * @param BOUNDARY
+	 * @param params
+	 * @param dos
+	 * 拼接数组参数
+	 */
+	public static void joinValues(String[] values, String valueName,
+			String BOUNDARY, String params, DataOutputStream dos) {
+		final String PREFIX = "--";
+		final String END = "\r\n";
+		final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+		if (values != null && values.length > 0) {
+			StringBuffer stringBuffer = null;
+			for (int i = 0; i < values.length; i++) {
+				stringBuffer = null;
+				stringBuffer = new StringBuffer();
+				String value = values[i];
+				stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
+				stringBuffer.append("Content-Disposition: form-data; name=\"")
+						.append(valueName).append("\"").append(END).append(END);
+				stringBuffer.append(value).append(END);
+				params = stringBuffer.toString();
+				try {
+					dos.write(params.getBytes("UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
 	 * URL 方式测试文件
 	 * 
 	 * @param actionUrl
@@ -158,20 +193,28 @@ public class HttpConnectionUtil {
 	 *            文件url 列表
 	 * @return
 	 */
-	public static ClassificationResult uploadUri(String actionUrl, String timestamp, String nonce, String signature,
+	public static ClassificationResult uploadUri(String actionUrl,
+			String timestamp, String nonce, String signature,
 			ArrayList<String> fileLists, Options options) throws Exception {
 		BufferedReader reader = null;
 		String result = null;
 		StringBuffer sbf = new StringBuffer();
-		String httpArg = "timestamp=" + timestamp + "&nonce=" + nonce + "&signature=" + URLEncoder.encode(signature);
-				
+		String httpArg = "timestamp=" + timestamp + "&nonce=" + nonce
+				+ "&signature=" + URLEncoder.encode(signature);
+
 		if (null != options.getUid()) {
 			httpArg = httpArg + "&uid=" + options.getUid();
 		}
 		String[] tags = options.getTags();
+		String[] CIDs = options.getCIDs();
 		if (tags != null && tags.length > 0) {
 			for (int i = 0; i < tags.length; i++) {
 				httpArg += "&tag=" + tags[i];
+			}
+		}
+		if (CIDs != null && CIDs.length > 0) {
+			for (int i = 0; i < CIDs.length; i++) {
+				httpArg += "&CID=" + CIDs[i];
 			}
 		}
 		if (fileLists.size() > 0) {
@@ -182,9 +225,11 @@ public class HttpConnectionUtil {
 		}
 
 		URL connect_url = new URL(actionUrl);
-		HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) connect_url
+				.openConnection();
 		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
 
 		connection.setDoOutput(true);
 		connection.getOutputStream().write(httpArg.getBytes("UTF-8"));
@@ -197,6 +242,7 @@ public class HttpConnectionUtil {
 			sbf.append("\r\n");
 		}
 		reader.close();
-		return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+		return new ClassificationResult(connection.getResponseCode(),
+				sbf.toString());
 	}
 }

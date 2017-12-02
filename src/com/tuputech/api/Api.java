@@ -89,6 +89,7 @@ public class Api {
 
 				String result_json = jsonObject.getString("json");
 				String code = JSONObject.fromObject(result_json).getString("code");
+				String message = JSONObject.fromObject(result_json).getString("message");
 				if (Integer.valueOf(code) == 0) {
 					String result_signature = jsonObject.getString("signature");
 					// 进行验证
@@ -104,7 +105,7 @@ public class Api {
 					}
 				} else {
 					System.out.println("TUPU API: response verify failed, total time" + time + "s");
-					return ErrorUtil.getErrorMsg(Integer.valueOf(code), "");
+					return ErrorUtil.getErrorMsg(Integer.valueOf(code), message);
 				}
 			} else {
 				System.out.println("TUPU API: response verify failed, total time" + time + "s");

@@ -103,7 +103,7 @@ public class ErrorUtil {
 			errMsg = "server has a problem";
 			break;
 		case ERROR_CODE_UNKNOWN_ERROR:
-			errMsg ="server has a problem";	
+//			errMsg ="server has a problem";	
 			break;
 		case ERROR_CODE_RESULT_VERIFY_FAILED:
 			errMsg = "response verify failed";
