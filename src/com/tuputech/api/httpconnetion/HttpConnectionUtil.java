@@ -53,9 +53,11 @@ public class HttpConnectionUtil {
 		if (null != options.getUid()) {
 			param.put("uid", options.getUid());
 		}
-
+		if (null != options.getCID()) {
+			param.put("CID", options.getCID());
+		}
 		String[] tags = options.getTags();
-		String[] CIDs = options.getCIDs();
+
 		final String PREFIX = "--";
 		final String END = "\r\n";
 		final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
@@ -100,8 +102,6 @@ public class HttpConnectionUtil {
 				dos.write(params.getBytes("UTF-8"));
 			}
 			joinValues(tags, "tag", BOUNDARY, params, dos);
-			joinValues(CIDs, "CID", BOUNDARY, params, dos);
-
 		}
 		for (int i = 0; i < fileLists.size(); i++) {
 
@@ -205,16 +205,13 @@ public class HttpConnectionUtil {
 		if (null != options.getUid()) {
 			httpArg = httpArg + "&uid=" + options.getUid();
 		}
+		if (null != options.getCID()) {
+			httpArg = httpArg + "&CID=" + options.getCID();
+		}
 		String[] tags = options.getTags();
-		String[] CIDs = options.getCIDs();
 		if (tags != null && tags.length > 0) {
 			for (int i = 0; i < tags.length; i++) {
 				httpArg += "&tag=" + tags[i];
-			}
-		}
-		if (CIDs != null && CIDs.length > 0) {
-			for (int i = 0; i < CIDs.length; i++) {
-				httpArg += "&CID=" + CIDs[i];
 			}
 		}
 		if (fileLists.size() > 0) {
