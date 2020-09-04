@@ -29,7 +29,7 @@ public class Api {
      */
     public Api(String secretId, String pkPath, String requestUrl) {
         if (null == requestUrl) {
-            requestUrl = "http://api.open.tuputech.com/v3/recognition/";
+            requestUrl = ConfigUtil.NET_WORK.API_URI;
         }
         this.secretId = secretId;
         this.url = requestUrl + secretId;

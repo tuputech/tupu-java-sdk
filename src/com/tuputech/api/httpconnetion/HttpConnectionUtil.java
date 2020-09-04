@@ -16,8 +16,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+import com.tuputech.api.httpconnetion.model.SpeechRequest;
 import com.tuputech.api.model.ClassificationResult;
 import com.tuputech.api.model.Options;
+import com.tuputech.api.model.SpeechStream;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Created by soap on 16/7/4. 上传文件并返回结果
@@ -26,7 +30,6 @@ import com.tuputech.api.model.Options;
 public class HttpConnectionUtil {
 
     /**
-     * 
      * @param actionUrl 请求地址
      * @param secretId  客户secretId
      * @param timestamp 时间戳
@@ -36,7 +39,7 @@ public class HttpConnectionUtil {
      * @return
      */
     public static ClassificationResult uploadImage(String actionUrl, String secretId, String timestamp, String nonce,
-            String signature, ArrayList<String> fileLists, Options options) throws Exception {
+                                                   String signature, ArrayList<String> fileLists, Options options) throws Exception {
         String BOUNDARY = UUID.randomUUID().toString();
         Map<String, String> param = new HashMap<String, String>();
         param.put("secretId", secretId);
@@ -130,7 +133,6 @@ public class HttpConnectionUtil {
     }
 
     /**
-     * 
      * @param values
      * @param valueName
      * @param BOUNDARY
@@ -138,7 +140,7 @@ public class HttpConnectionUtil {
      * @param dos       拼接数组参数
      */
     public static void joinValues(String[] values, String valueName, String BOUNDARY, String params,
-            DataOutputStream dos) {
+                                  DataOutputStream dos) {
         final String PREFIX = "--";
         final String END = "\r\n";
         if (values != null && values.length > 0) {
@@ -167,7 +169,7 @@ public class HttpConnectionUtil {
 
     /**
      * URL 方式测试文件
-     * 
+     *
      * @param actionUrl 请求路径
      * @param timestamp 时间戳
      * @param nonce
@@ -176,7 +178,7 @@ public class HttpConnectionUtil {
      * @return
      */
     public static ClassificationResult uploadUri(String actionUrl, String timestamp, String nonce, String signature,
-            ArrayList<String> fileLists, Options options) throws Exception {
+                                                 ArrayList<String> fileLists, Options options) throws Exception {
         BufferedReader reader = null;
         StringBuffer sbf = new StringBuffer();
         String httpArg = "timestamp=" + timestamp + "&nonce=" + nonce + "&signature="
@@ -204,6 +206,122 @@ public class HttpConnectionUtil {
         connection.setReadTimeout(options.getReadTimeout());
         connection.setDoOutput(true);
         connection.getOutputStream().write(httpArg.getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
+
+    /**
+     * URL 方式测试文件
+     *
+     * @param actionUrl 请求路径
+     * @param timestamp 时间戳
+     * @param nonce
+     * @param signature 鉴权信息
+     * @param fileLists 文件url 列表
+     * @return
+     */
+    public static ClassificationResult uploadSpeechUri(String actionUrl, long timestamp, double nonce, String signature,
+                                                       ArrayList<SpeechStream> fileLists, Options options) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+        JSONArray speechStream = new JSONArray();
+        if (fileLists.size() > 0) {
+            for (SpeechStream speech : fileLists) {
+                JSONObject speechJson = new JSONObject();
+                speechJson.put("url", speech.getUrl());
+                if (speech.getCallbackUrl() != null && speech.getCallbackUrl() != "") {
+                    speechJson.put("callback", speech.getCallbackUrl());
+                }
+                if (speech.getRoomId() != null && speech.getRoomId() != "") {
+                    speechJson.put("roomId", speech.getRoomId());
+                }
+                if (speech.getUserId() != null && speech.getUserId() != "") {
+                    speechJson.put("userId", speech.getUserId());
+                }
+                if (speech.getFormId() != null && speech.getFormId() != "") {
+                    speechJson.put("forumId", speech.getFormId());
+                }
+                speechJson.put("callbackRules", speech.getCallbackRules());
+                speechJson.put("returnPreSpeech", speech.isReturnPreSpeech());
+                speechStream.add(speechJson);
+            }
+        }
+        requestJson.put("speechStream",speechStream);
+        requestJson.put("nonce",nonce);
+        requestJson.put("signature",signature);
+        requestJson.put("timestamp",timestamp);
+
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setConnectTimeout(options.getConnectTimeout());
+        connection.setReadTimeout(options.getReadTimeout());
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
+    /**
+     * 关闭语音流
+     */
+    public static ClassificationResult closeSpeechStream(String actionUrl, long timestamp, double nonce, String signature,
+                                                         ArrayList<String> requestIdLists, Options options) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+        JSONArray speechStream = new JSONArray();
+        if (requestIdLists.size() > 0) {
+            for (String requestId : requestIdLists) {
+                JSONObject speechJson = new JSONObject();
+                speechJson.put("requestId", requestId);
+                speechStream.add(speechJson);
+            }
+        }
+        requestJson.put("speechStream",speechStream);
+        requestJson.put("nonce",nonce);
+        requestJson.put("signature",signature);
+        requestJson.put("timestamp",timestamp);
+
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setConnectTimeout(options.getConnectTimeout());
+        connection.setReadTimeout(options.getReadTimeout());
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
         connection.connect();
         InputStream is = connection.getInputStream();
         reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
