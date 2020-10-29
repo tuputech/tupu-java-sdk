@@ -91,7 +91,7 @@ public class ErrorUtil {
 			errMsg  ="task has closed";
 			break;
 		case ERROR_CODE_IMAGE_ERROR:
-			errMsg = "files formats error";
+//			errMsg = "files formats error";
 			break;
 		case ERROR_CODE_NOT_FOUND:
 			errMsg = "addr is error";
