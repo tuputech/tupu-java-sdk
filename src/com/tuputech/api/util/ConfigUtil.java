@@ -32,6 +32,9 @@ public class ConfigUtil {
         //语音识别流关闭接口
         public final static String SPEECH_API_URI_CLOSE = "http://api.open.tuputech.com/v3/recognition/speech/stream/close/";
 
+        //视频接口
+        public final static String SYNC_VIDEO_API_URI = "http://api.open.tuputech.com/v3/recognition/video/syncscan/";
+
     }
 
     /**

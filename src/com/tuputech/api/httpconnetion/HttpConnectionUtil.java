@@ -20,6 +20,7 @@ import com.tuputech.api.httpconnetion.model.SpeechRequest;
 import com.tuputech.api.model.ClassificationResult;
 import com.tuputech.api.model.Options;
 import com.tuputech.api.model.SpeechStream;
+import com.tuputech.api.model.Video;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -256,10 +257,10 @@ public class HttpConnectionUtil {
                 speechStream.add(speechJson);
             }
         }
-        requestJson.put("speechStream",speechStream);
-        requestJson.put("nonce",nonce);
-        requestJson.put("signature",signature);
-        requestJson.put("timestamp",timestamp);
+        requestJson.put("speechStream", speechStream);
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
 
         URL connect_url = new URL(actionUrl);
         HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
@@ -303,10 +304,10 @@ public class HttpConnectionUtil {
                 speechStream.add(speechJson);
             }
         }
-        requestJson.put("speechStream",speechStream);
-        requestJson.put("nonce",nonce);
-        requestJson.put("signature",signature);
-        requestJson.put("timestamp",timestamp);
+        requestJson.put("speechStream", speechStream);
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
 
         URL connect_url = new URL(actionUrl);
         HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
@@ -333,4 +334,109 @@ public class HttpConnectionUtil {
         reader.close();
         return new ClassificationResult(connection.getResponseCode(), sbf.toString());
     }
+
+
+    /**
+     * URL 方式测试文件
+     *
+     * @param actionUrl 请求路径
+     * @param timestamp 时间戳
+     * @param nonce
+     * @param signature 鉴权信息
+     * @return
+     */
+    public static ClassificationResult uploadVideo(String actionUrl, String timestamp, String nonce, String signature, Video file, Options options) throws Exception {
+        String BOUNDARY = UUID.randomUUID().toString();
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("timestamp", timestamp);
+        param.put("signature", signature);
+        param.put("nonce", nonce);
+        param.put("interval", String.valueOf(file.getInterval()));
+        param.put("maxFrames", String.valueOf(file.getMaxFrames()));
+        if (file.getVideo() != null && file.getVideo().startsWith("http")) {
+        param.put("video", String.valueOf(file.getVideo()));
+        }
+        if (null != options.getUid()) {
+            param.put("uid", options.getUid());
+        }
+        String[] tags = options.getTags();
+
+        final String PREFIX = "--";
+        final String END = "\r\n";
+        final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+        String result = null;
+
+        URL url = new URL(actionUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(options.getConnectTimeout());
+        conn.setReadTimeout(options.getReadTimeout());
+        conn.setDoInput(true); // 允许输入流
+        conn.setDoOutput(true); // 允许输出流
+        conn.setUseCaches(false); // 不允许使用缓存
+        conn.setRequestMethod("POST"); // 请求方式
+        conn.setRequestProperty("Charset", "UTF-8"); // 设置编码
+        conn.setRequestProperty("connection", "keep-alive");
+        conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+        conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+
+        /**
+         * 当文件不为空，把文件包装并且上传
+         */
+        DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+        StringBuffer stringBuffer = null;
+        String params = "";
+
+        /***
+         * 以下是用于上传参数
+         */
+        if (param != null && param.size() > 0) {
+            Iterator<String> it = param.keySet().iterator();
+            while (it.hasNext()) {
+                stringBuffer = null;
+                stringBuffer = new StringBuffer();
+                String key = it.next();
+                String value = param.get(key);
+                stringBuffer.append(PREFIX).append(BOUNDARY).append(END);
+                stringBuffer.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append(END)
+                        .append(END);
+                stringBuffer.append(value).append(END);
+                params = stringBuffer.toString();
+                dos.write(params.getBytes("UTF-8"));
+            }
+            joinValues(tags, "tag", BOUNDARY, params, dos);
+        }
+
+        if (file.getVideo() != null && !file.getVideo().startsWith("http")) {
+            dos.write((PREFIX + BOUNDARY + END).getBytes("UTF-8"));
+            dos.write(("Content-Disposition:form-data; name=\"" + "video" + "\"; filename=\"" + file.getVideo() + "\""
+                    + END + "Content-Type: image/gif" + END).getBytes("UTF-8"));
+            dos.writeBytes(END);
+            FileInputStream fStream = new FileInputStream(file.getVideo());
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int length = -1;
+            while ((length = fStream.read(buffer)) != -1) {
+                dos.write(buffer, 0, length);
+            }
+            dos.writeBytes(END);
+            fStream.close();
+        }
+
+        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + END).getBytes("UTF-8");
+        dos.write(end_data);
+        dos.flush();
+        int res = conn.getResponseCode();
+        if (res == 200) {
+            InputStream input = conn.getInputStream();
+            StringBuffer sb1 = new StringBuffer();
+            int ss;
+            while ((ss = input.read()) != -1) {
+                sb1.append((char) ss);
+            }
+
+            result = sb1.toString();
+        }
+        return new ClassificationResult(res, result);
+    }
+
 }

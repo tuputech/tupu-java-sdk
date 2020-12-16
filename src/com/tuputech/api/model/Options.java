@@ -4,6 +4,15 @@ public class Options {
 
     private String[] tags;
     private String uid = null;
+    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     private int readTimeout = 15000;
     private int connectTimeout = 15000;
