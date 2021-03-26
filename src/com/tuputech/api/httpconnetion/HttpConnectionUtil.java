@@ -17,10 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.tuputech.api.httpconnetion.model.SpeechRequest;
-import com.tuputech.api.model.ClassificationResult;
-import com.tuputech.api.model.Options;
-import com.tuputech.api.model.SpeechStream;
-import com.tuputech.api.model.Video;
+import com.tuputech.api.model.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -438,5 +435,72 @@ public class HttpConnectionUtil {
         }
         return new ClassificationResult(res, result);
     }
+
+
+
+    /**
+     * URL 方式测试文本
+     *
+     * @param actionUrl 请求路径
+     * @param timestamp 时间戳
+     * @param nonce
+     * @param signature 鉴权信息
+     * @return
+     */
+    public static ClassificationResult uploadText(String actionUrl, String timestamp, String nonce, String signature, ArrayList<Text> textList) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+        JSONArray textJsonArray = new JSONArray();
+        requestJson.put("timestamp", timestamp);
+        requestJson.put("signature", signature);
+        requestJson.put("nonce", nonce);
+
+
+        if (textList.size() > 0) {
+            for (Text text : textList) {
+                JSONObject textJson = new JSONObject();
+                textJson.put("content", text.getContent());
+                if (text.getContentId() != null && text.getContentId() != "") {
+                    textJson.put("contentId", text.getContentId());
+                }
+                if (text.getUserId() != null && text.getUserId() != "") {
+                    textJson.put("userId", text.getUserId());
+                }
+                if (text.getForumId() != null && text.getForumId() != "") {
+                    textJson.put("forumId", text.getForumId());
+                }
+
+                textJsonArray.add(textJson);
+            }
+        }
+
+        requestJson.put("text", textJsonArray);
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setConnectTimeout(16000);
+        connection.setReadTimeout(16000);
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
 
 }

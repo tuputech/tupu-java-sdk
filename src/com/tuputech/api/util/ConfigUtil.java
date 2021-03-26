@@ -35,6 +35,10 @@ public class ConfigUtil {
         //视频接口
         public final static String SYNC_VIDEO_API_URI = "http://api.open.tuputech.com/v3/recognition/video/syncscan/";
 
+        //文本识别接口
+
+        public final static String TEXT_API_URI ="http://api.open.tuputech.com/v3/recognition/text/";
+
     }
 
     /**
