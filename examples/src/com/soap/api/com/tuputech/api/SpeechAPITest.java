@@ -27,12 +27,17 @@ public class SpeechAPITest {
         speechStream.setUrl("");
         speechStreamLists.add(speechStream);
 
+        //指定运行的任务 ID 列表
+        String tasks[] = { "taskId1", "taskId2" };
+
+
+
         // options
         Options options = new Options();
         // http timeout config
         options.setConnectTimeout(16000);
         options.setReadTimeout(16000);
-
+        options.setTasks(tasks);
 
         SpeechApi api = new SpeechApi(secretId, privateKey, speechApiUrl, closeSpeechUrl);
         //执行语音检测
@@ -41,6 +46,7 @@ public class SpeechAPITest {
 
 
         ArrayList<String> requestIdLists = new ArrayList();
+//        requestIdLists.add("5f50bd5ecd0c02001e843433");
         //添加 客户提交的音频流的唯一请求id，后续可以通过该id查到音频的相关信息
         requestIdLists.add("");
         //关闭 id 对应的语音检测

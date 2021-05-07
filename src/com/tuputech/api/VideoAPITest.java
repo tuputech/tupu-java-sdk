@@ -24,6 +24,11 @@ public class VideoAPITest {
         //文件地址
         video.setVideo("");
 
+
+        //指定运行的任务 ID 列表
+        String tasks[] = { "taskId1", "taskId2" };
+
+
         // options
         Options options = new Options();
         // http timeout config
@@ -32,6 +37,8 @@ public class VideoAPITest {
         options.setReadTimeout(2*60*1000);
         //房间名
         options.setTag("房间名");
+        options.setTasks(tasks);
+
 
 
         VideoApi api = new VideoApi(secretId, privateKey, videoApiUrl);

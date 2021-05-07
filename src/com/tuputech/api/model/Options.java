@@ -5,6 +5,17 @@ public class Options {
     private String[] tags;
     private String uid = null;
     private String tag;
+    //指定运行的任务 ID 列表
+    private String[] tasks;
+
+    public String[] getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(String[] tasks) {
+        this.tasks = tasks;
+    }
+
 
     public String getTag() {
         return tag;

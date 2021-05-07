@@ -24,8 +24,12 @@ public class APITest {
 
         // options
         String tags[] = { "tag1", "tag2" };
+        //指定运行的任务 ID 列表
+        String tasks[] = { "taskId1", "taskId2" };
+
         Options options = new Options();
         options.setTags(tags);
+        options.setTasks(tasks);
 
         // http timeout config
         options.setConnectTimeout(16000);

@@ -11,20 +11,25 @@ public class APITest {
 
     public static void main(String[] args) {
         // secret id
-        String secretId = "your_secret_id";
+        String secretId = "";
         // private KEY path
-        String privateKey = "your_private_key_path";
+        String privateKey = "";
         // request Url
         String requestUrl = "http://api.open.tuputech.com/v3/recognition/";
         // fileList imageFile or url
         ArrayList<String> fileLists = new ArrayList<String>();
-        fileLists.add("./test1.jpg");
+         fileLists.add("../test.jpg");
+
         // fileLists.add("../test2.jpg");
 
         // options
         String tags[] = { "tag1", "tag2" };
+        //指定运行的任务 ID 列表
+        String tasks[] = { "taskId1", "taskId2" };
+
         Options options = new Options();
         options.setTags(tags);
+        options.setTasks(tasks);
 
         // http timeout config
         options.setConnectTimeout(16000);

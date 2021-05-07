@@ -27,12 +27,17 @@ public class SpeechAPITest {
         speechStream.setUrl("");
         speechStreamLists.add(speechStream);
 
+        //指定运行的任务 ID 列表
+        String tasks[] = { "taskId1", "taskId2" };
+
+
+
         // options
         Options options = new Options();
         // http timeout config
         options.setConnectTimeout(16000);
         options.setReadTimeout(16000);
-
+        options.setTasks(tasks);
 
         SpeechApi api = new SpeechApi(secretId, privateKey, speechApiUrl, closeSpeechUrl);
         //执行语音检测

@@ -48,6 +48,7 @@ public class HttpConnectionUtil {
             param.put("uid", options.getUid());
         }
         String[] tags = options.getTags();
+        String[] tasks = options.getTasks();
 
         final String PREFIX = "--";
         final String END = "\r\n";
@@ -92,6 +93,8 @@ public class HttpConnectionUtil {
                 dos.write(params.getBytes("UTF-8"));
             }
             joinValues(tags, "tag", BOUNDARY, params, dos);
+            joinValues(tasks, "task", BOUNDARY, params, dos);
+
         }
         for (int i = 0; i < fileLists.size(); i++) {
 
@@ -188,6 +191,12 @@ public class HttpConnectionUtil {
                 httpArg += "&tag=" + tags[i];
             }
         }
+        String[] tasks = options.getTasks();
+        if (tasks != null && tasks.length > 0) {
+            for (int i = 0; i < tasks.length; i++) {
+                httpArg += "&task=" + tasks[i];
+            }
+        }
         if (fileLists.size() > 0) {
             for (int i = 0; i < fileLists.size(); i++) {
                 httpArg += "&image="
@@ -258,7 +267,10 @@ public class HttpConnectionUtil {
         requestJson.put("nonce", nonce);
         requestJson.put("signature", signature);
         requestJson.put("timestamp", timestamp);
+        if (options != null && options.getTasks() != null && options.getTasks().length > 0) {
+            requestJson.put("tasks", options.getTasks());
 
+        }
         URL connect_url = new URL(actionUrl);
         HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
         connection.setRequestMethod("POST");
@@ -350,13 +362,18 @@ public class HttpConnectionUtil {
         param.put("nonce", nonce);
         param.put("interval", String.valueOf(file.getInterval()));
         param.put("maxFrames", String.valueOf(file.getMaxFrames()));
+
+//        if(options!=null && options.getTasks()!=null&&options.getTasks().length>0){
+//            param.put("task", options.getTasks());
+//        }
         if (file.getVideo() != null && file.getVideo().startsWith("http")) {
-        param.put("video", String.valueOf(file.getVideo()));
+            param.put("video", String.valueOf(file.getVideo()));
         }
         if (null != options.getUid()) {
             param.put("uid", options.getUid());
         }
         String[] tags = options.getTags();
+        String [] tasks = options.getTasks();
 
         final String PREFIX = "--";
         final String END = "\r\n";
@@ -401,6 +418,8 @@ public class HttpConnectionUtil {
                 dos.write(params.getBytes("UTF-8"));
             }
             joinValues(tags, "tag", BOUNDARY, params, dos);
+            joinValues(tasks, "task", BOUNDARY, params, dos);
+
         }
 
         if (file.getVideo() != null && !file.getVideo().startsWith("http")) {
@@ -435,7 +454,6 @@ public class HttpConnectionUtil {
         }
         return new ClassificationResult(res, result);
     }
-
 
 
     /**
