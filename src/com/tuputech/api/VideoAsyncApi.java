@@ -3,8 +3,8 @@ package com.tuputech.api;
 import com.tuputech.api.httpconnetion.HttpConnectionUtil;
 import com.tuputech.api.model.ClassificationResult;
 import com.tuputech.api.model.Options;
-import com.tuputech.api.model.SpeechStream;
 import com.tuputech.api.model.Video;
+import com.tuputech.api.model.VideoAsync;
 import com.tuputech.api.util.ConfigUtil;
 import com.tuputech.api.util.ErrorUtil;
 import com.tuputech.api.util.SignatureAndVerifyUtil;
@@ -19,22 +19,23 @@ import java.util.ArrayList;
  * @date 2020-12-15
  * 视频调用Api
  */
-public class VideoApi {
+public class VideoAsyncApi {
     private String secretId;
     private String url;
     private PrivateKey privateKey;
-    private String urlClose;
+    private String urlClose = "http://api.open.tuputech.com/v3/recognition/video/close/";
+    private String videoType;
 
     /**
      * @param secretId 用户secretId
      * @param pkPath   用户私钥
      * @param videoUrl 请求接口地址
      */
-    public VideoApi(String secretId, String pkPath, String videoUrl) {
+    public VideoAsyncApi(String secretId, String pkPath, String videoType, String videoUrl) {
         if (null == videoUrl) {
-            videoUrl = ConfigUtil.NET_WORK.SYNC_VIDEO_API_URI;
+            videoUrl = videoType.equals(ConfigUtil.VIDEO_UPLOAD_TYPE.UPLOAD_VIDEO_STREAM_TYPE) ? ConfigUtil.NET_WORK.VIDEO_ASYNC_STREAM_API_URI : ConfigUtil.NET_WORK.VIDEO_ASYNC_FILE_API_URI;
         }
-
+        this.videoType =videoType;
         this.secretId = secretId;
         this.url = videoUrl + secretId;
         this.privateKey = SignatureAndVerifyUtil.readPrivateKey(pkPath);
@@ -45,7 +46,7 @@ public class VideoApi {
      * @param video 文件
      * @return
      */
-    public JSONObject doVideoSyncApi(Video video, Options options) {
+    public JSONObject doVideoASyncApi(VideoAsync video) {
         if (video == null) {
             return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
         }
@@ -59,8 +60,8 @@ public class VideoApi {
 
         try {
             // 返回网络请求数据
-            classificationResult = HttpConnectionUtil.uploadVideo(url, String.valueOf(timestamp), String.valueOf(nonce), signature, video,
-                    options);
+            classificationResult = HttpConnectionUtil.uploadVideoAsync(url, String.valueOf(timestamp), String.valueOf(nonce), signature, video,
+                     videoType);
 
             return getResult(classificationResult);
         } catch (Exception e) {
@@ -68,6 +69,33 @@ public class VideoApi {
             return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_OTHERS, e.getMessage());
         }
     }
+    /**
+     * @param videoId
+     * @return
+     */
+    public JSONObject closeSpeechApi(String videoId) {
+        if (videoId == null || videoId.isEmpty()) {
+            return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
+        }
+        long timestamp = Math.round(System.currentTimeMillis() / 1000.0);
+        double nonce = Math.random();
+        String sign_string = secretId + "," + timestamp + "," + nonce;
+        String signature = SignatureAndVerifyUtil.Signature(privateKey, sign_string);
+        ClassificationResult classificationResult = null;
+        urlClose =urlClose+secretId;
+        try {
+            // 返回网络请求数据
+            classificationResult = HttpConnectionUtil.closeVideoAsync(urlClose, timestamp, nonce, signature, videoId);
+
+            return getResult(classificationResult);
+        } catch (Exception e) {
+
+            System.out.println("TUPU API: response verify failed, error is " + e.getMessage());
+            return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_OTHERS, e.getMessage());
+        }
+    }
+
+
 
 
     /**

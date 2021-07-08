@@ -20,6 +20,20 @@ public class ConfigUtil {
     }
 
     /**
+     * VIDEO测试数据类型
+     */
+    public final static class VIDEO_UPLOAD_TYPE {
+        /**
+         * upload file
+         **/
+        public final static String UPLOAD_VIDEO_FILE_TYPE = "file";
+        /**
+         * upload uri
+         */
+        public final static String UPLOAD_VIDEO_STREAM_TYPE = "stream";
+    }
+
+    /**
      * api 调用地址
      */
     public final static class NET_WORK {
@@ -38,6 +52,12 @@ public class ConfigUtil {
         //文本识别接口
 
         public final static String TEXT_API_URI ="http://api.open.tuputech.com/v3/recognition/text/";
+
+        //异步视频文件识别
+        public final static String VIDEO_ASYNC_FILE_API_URI ="http://api.open.tuputech.com/v3/recognition/video/asyncscan/";
+
+        //异步视频文件流识别
+        public final static String VIDEO_ASYNC_STREAM_API_URI ="http://api.open.tuputech.com/v3/recognition/video/stream/";
 
     }
 

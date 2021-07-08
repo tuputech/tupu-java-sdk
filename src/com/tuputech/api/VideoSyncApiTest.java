@@ -6,7 +6,7 @@ import com.tuputech.api.util.ConfigUtil;
 import net.sf.json.JSONObject;
 
 
-public class VideoAPITest {
+public class VideoSyncApiTest {
 
     public static void main(String[] args) {
         // secret id
@@ -41,7 +41,7 @@ public class VideoAPITest {
 
 
 
-        VideoApi api = new VideoApi(secretId, privateKey, videoApiUrl);
+        VideoSyncApi api = new VideoSyncApi(secretId, privateKey, videoApiUrl);
         //执行同步视频检测
         JSONObject result = api.doVideoSyncApi(video, options);
         System.out.println("do video result is : "+ result);

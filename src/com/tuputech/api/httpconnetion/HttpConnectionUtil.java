@@ -16,8 +16,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+import com.sun.javafx.tools.packager.Log;
 import com.tuputech.api.httpconnetion.model.SpeechRequest;
 import com.tuputech.api.model.*;
+import com.tuputech.api.util.ConfigUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -373,7 +375,7 @@ public class HttpConnectionUtil {
             param.put("uid", options.getUid());
         }
         String[] tags = options.getTags();
-        String [] tasks = options.getTasks();
+        String[] tasks = options.getTasks();
 
         final String PREFIX = "--";
         final String END = "\r\n";
@@ -520,5 +522,124 @@ public class HttpConnectionUtil {
         return new ClassificationResult(connection.getResponseCode(), sbf.toString());
     }
 
+
+    /**
+     * 测试视频信息
+     *
+     * @param actionUrl 请求路径
+     * @param timestamp 时间戳
+     * @param nonce
+     * @param signature 鉴权信息
+     * @return
+     */
+    public static ClassificationResult uploadVideoAsync(String actionUrl, String timestamp, String nonce, String signature, VideoAsync file, String type) throws Exception {
+
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+        JSONArray callbackRules = new JSONArray();
+        if (file != null && file.getCallbackRules() != null && !file.getCallbackRules().isEmpty()) {
+            for (VideoTask task : file.getCallbackRules()) {
+                JSONObject videoRulesJson = new JSONObject();
+                if (task.getFaceId() != null && task.getFaceId().length > 0) {
+                    videoRulesJson.put("faceId", task.getFaceId());
+                }
+                videoRulesJson.put("label", task.getLabel());
+                videoRulesJson.put("similarity", task.getSimilarity());
+                if (task.getTypeName() != null && task.getTypeName().length > 0) {
+                    videoRulesJson.put("typeName", task.getTypeName());
+                }
+                callbackRules.add(videoRulesJson);
+            }
+        }
+
+        requestJson.put("video",file.getVideo());
+        if (file.getCustomInfo() != null) {
+            requestJson.put("customerInfo", file.getCustomInfo());
+        }
+
+        if (file.getCallbackUrl() != null) {
+            requestJson.put("callbackUrl", file.getCallbackUrl());
+        }
+        if (type == ConfigUtil.VIDEO_UPLOAD_TYPE.UPLOAD_VIDEO_FILE_TYPE) {
+            requestJson.put("realTimeCallback", file.isRealTimeCallback());
+        }
+        if (type == ConfigUtil.VIDEO_UPLOAD_TYPE.UPLOAD_VIDEO_STREAM_TYPE) {
+            requestJson.put("fragmentTime", file.getFragmentTime());
+        }
+
+        requestJson.put("audio", file.isAudio());
+        requestJson.put("task", file.getTask());
+
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
+
+
+        System.out.println("requestJson" + requestJson.toString());
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
+
+    /**
+     * 关闭视频流
+     */
+    public static ClassificationResult closeVideoAsync(String actionUrl, long timestamp, double nonce, String signature,
+                                                       String videoId) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+
+
+        requestJson.put("videoId", videoId);
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
+
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
 
 }
