@@ -1,5 +1,6 @@
 package com.tuputech.api.httpconnetion;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -553,7 +554,7 @@ public class HttpConnectionUtil {
             }
         }
 
-        requestJson.put("video",file.getVideo());
+        requestJson.put("video", file.getVideo());
         if (file.getCustomInfo() != null) {
             requestJson.put("customerInfo", file.getCustomInfo());
         }
@@ -641,5 +642,60 @@ public class HttpConnectionUtil {
         reader.close();
         return new ClassificationResult(connection.getResponseCode(), sbf.toString());
     }
+
+
+    /**
+     * base64 Image测试
+     *
+     * @param actionUrl 请求路径
+     * @param timestamp 时间戳
+     * @param nonce
+     * @param signature 鉴权信息
+     * @return
+     */
+    public static ClassificationResult uploadBase64Image(String actionUrl, String timestamp, String nonce, String signature, ImageBase64 imageBase64) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+
+        requestJson.put("timestamp", timestamp);
+        requestJson.put("signature", signature);
+        requestJson.put("nonce", nonce);
+
+        requestJson.put("images", imageBase64.getImages());
+        if (imageBase64 != null && imageBase64.getTags() != null && imageBase64.getTags().length > 0) {
+            requestJson.put("tags", imageBase64.getTags());
+
+        }
+        if (imageBase64 != null && imageBase64.getTasks() != null && imageBase64.getTasks().length > 0) {
+            requestJson.put("tasks", imageBase64.getTasks());
+
+        }
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setConnectTimeout(16000);
+        connection.setReadTimeout(16000);
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
 
 }

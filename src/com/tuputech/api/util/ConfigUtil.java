@@ -51,14 +51,16 @@ public class ConfigUtil {
 
         //文本识别接口
 
-        public final static String TEXT_API_URI ="http://api.open.tuputech.com/v3/recognition/text/";
+        public final static String TEXT_API_URI = "http://api.open.tuputech.com/v3/recognition/text/";
 
         //异步视频文件识别
-        public final static String VIDEO_ASYNC_FILE_API_URI ="http://api.open.tuputech.com/v3/recognition/video/asyncscan/";
+        public final static String VIDEO_ASYNC_FILE_API_URI = "http://api.open.tuputech.com/v3/recognition/video/asyncscan/";
 
         //异步视频文件流识别
-        public final static String VIDEO_ASYNC_STREAM_API_URI ="http://api.open.tuputech.com/v3/recognition/video/stream/";
+        public final static String VIDEO_ASYNC_STREAM_API_URI = "http://api.open.tuputech.com/v3/recognition/video/stream/";
 
+        //Base64图片
+        public final static String IMAGE_BASE64_URL = "http://api.open.tuputech.com/v3/recognition/image/sync/base64/";
     }
 
     /**

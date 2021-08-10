@@ -12,7 +12,7 @@ public class SpeechAPITest {
     public static void main(String[] args) {
         // secret id
         String secretId = "";
-        // private KEY path
+        // private KEY path 以 .pem 结尾的话，当做密钥文件，其它字符串当做密钥内容处理
         String privateKey = "";
         // request Url
         String speechApiUrl = ConfigUtil.NET_WORK.SPEECH_API_URI;

@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.tuputech.api.APITest
+Main-Class: com.tuputech.api.ImageApiTest
 

@@ -1,8 +1,5 @@
 package com.tuputech.api;
-
-import com.tuputech.api.model.Options;
 import com.tuputech.api.model.Text;
-import com.tuputech.api.model.Video;
 import com.tuputech.api.util.ConfigUtil;
 import net.sf.json.JSONObject;
 
@@ -14,10 +11,10 @@ public class TextAPITest {
     public static void main(String[] args) {
         // secret id
         String secretId = "";
-        // private KEY path
+        // private KEY path 以 .pem 结尾的话，当做密钥文件，其它字符串当做密钥内容处理
         String privateKey = "";
         // request Url
-        String videoApiUrl = ConfigUtil.NET_WORK.TEXT_API_URI;
+        String textApiUrl = ConfigUtil.NET_WORK.TEXT_API_URI;
 
         //单次最大可传10个
         ArrayList<Text> textArrayList = new ArrayList<>(10);
@@ -40,11 +37,10 @@ public class TextAPITest {
         textArrayList.add(text2);
 
 
-
-        TextApi api = new TextApi(secretId, privateKey, videoApiUrl);
-        //执行同步视频检测
+        TextApi api = new TextApi(secretId, privateKey, textApiUrl);
+        //执行文本检测
         JSONObject result = api.doTextApi(textArrayList);
-        System.out.println("do text result is : "+ result);
+        System.out.println("do text result is : " + result);
 
 
     }

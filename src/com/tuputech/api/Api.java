@@ -34,8 +34,9 @@ public class Api {
         this.secretId = secretId;
         this.url = requestUrl + secretId;
         this.privateKey = SignatureAndVerifyUtil.readPrivateKey(pkPath);
-
     }
+
+
 
     /**
      * 
