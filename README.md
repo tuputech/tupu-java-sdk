@@ -62,7 +62,7 @@ public class APITest {
 
         /**
          * @param secretId   用户secretId
-         * @param privateKey 用户私钥路径
+         * @param privateKey 用户私钥，如果传递以 .pem结尾的话，当做密钥文件，其它字符串当做密钥内容处理
          * @param requestUrl            请求接口地址
          */
         Api api = new Api(secretId, privateKey, requestUrl);
