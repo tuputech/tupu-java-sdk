@@ -7,7 +7,7 @@ import net.sf.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SpeechAPITest {
+public class SpeechStreamApiTest {
 
     public static void main(String[] args) {
         // secret id
@@ -39,7 +39,7 @@ public class SpeechAPITest {
         options.setReadTimeout(16000);
         options.setTasks(tasks);
 
-        SpeechApi api = new SpeechApi(secretId, privateKey, speechApiUrl, closeSpeechUrl);
+        SpeechStreamApi api = new SpeechStreamApi(secretId, privateKey, speechApiUrl, closeSpeechUrl);
         //执行语音检测
         JSONObject result = api.doSpeechApi(speechStreamLists, options);
 //        System.out.println("do speech result is : "+ result);

@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * 语音流识别,API
  */
 
-public class SpeechApi {
+public class SpeechStreamApi {
     private String secretId;
     private String url;
     private PrivateKey privateKey;
@@ -30,7 +30,7 @@ public class SpeechApi {
      * @param speechUrl      请求接口地址
      * @param speechUrlClose 关闭请求接口地址
      */
-    public SpeechApi(String secretId, String pkPath, String speechUrl, String speechUrlClose) {
+    public SpeechStreamApi(String secretId, String pkPath, String speechUrl, String speechUrlClose) {
         if (null == speechUrl) {
             speechUrl = ConfigUtil.NET_WORK.SPEECH_API_URI;
         }

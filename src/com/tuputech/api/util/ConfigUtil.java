@@ -50,7 +50,6 @@ public class ConfigUtil {
         public final static String SYNC_VIDEO_API_URI = "http://api.open.tuputech.com/v3/recognition/video/syncscan/";
 
         //文本识别接口
-
         public final static String TEXT_API_URI = "http://api.open.tuputech.com/v3/recognition/text/";
 
         //异步视频文件识别
@@ -61,6 +60,12 @@ public class ConfigUtil {
 
         //Base64图片
         public final static String IMAGE_BASE64_URL = "http://api.open.tuputech.com/v3/recognition/image/sync/base64/";
+
+        //同步语音识别接口
+        public final static String SPEECH_SYNC_API_URI = "http://api.speech.tuputech.com/v3/recognition/speech/";
+
+        //同步语音识别接口
+        public final static String SPEECH_ASYNC_API_URI = "http://api.speech.tuputech.com/v3/recognition/speech/recording/async/";
     }
 
     /**
