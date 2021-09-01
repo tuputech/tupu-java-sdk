@@ -556,7 +556,7 @@ public class HttpConnectionUtil {
 
         requestJson.put("video", file.getVideo());
         if (file.getCustomInfo() != null) {
-            requestJson.put("customerInfo", file.getCustomInfo());
+            requestJson.put("customInfo", file.getCustomInfo());
         }
 
         if (file.getCallbackUrl() != null) {

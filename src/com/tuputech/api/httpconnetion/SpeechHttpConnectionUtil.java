@@ -36,7 +36,7 @@ public class SpeechHttpConnectionUtil {
 
         recordingFile.put("url", file.getUrl());
         if (file.getCustomInfo() != null) {
-            recordingFile.put("customerInfo", file.getCustomInfo());
+            recordingFile.put("customInfo", file.getCustomInfo());
         }
 
         if (file.getCallbackUrl() != null) {
