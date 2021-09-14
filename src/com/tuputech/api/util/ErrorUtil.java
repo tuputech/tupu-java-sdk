@@ -45,8 +45,9 @@ public class ErrorUtil {
 	public final static int ERROR_CODE_RESULT_VERIFY_FAILED = 102;
 	//103:其他异常
 	public final static int ERROR_CODE_OTHERS = 103;
-	public static JSONObject getErrorMsg(int errCode, String errMsg) {
+	public static JSONObject getErrorMsg(int errCode, String message) {
 		JSONObject obj = new JSONObject();
+		String errMsg ="";
 		switch (errCode) {
 		case CODE_SUCCESS:
 			errMsg ="success";
@@ -117,6 +118,7 @@ public class ErrorUtil {
 		}
 		obj.put("code", errCode);
 		obj.put("message", errMsg);
+		obj.put("originalMessage", message);
 		return obj;
 	}
 }
