@@ -1,14 +1,9 @@
 package com.tuputech.api;
 
-import com.sun.xml.internal.rngom.parse.host.Base;
 import com.tuputech.api.model.ImageBase64;
-import com.tuputech.api.model.Options;
-import com.tuputech.api.util.Base64Util;
 import com.tuputech.api.util.ConfigUtil;
 import com.tuputech.api.util.ImageBase64Converter;
 import net.sf.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class ImageBase64ApiTest {
 

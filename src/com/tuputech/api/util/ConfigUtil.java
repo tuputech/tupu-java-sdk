@@ -40,6 +40,9 @@ public class ConfigUtil {
 
         public final static String API_URI = "http://api.open.tuputech.com/v3/recognition/";
 
+        //人脸实名认证
+        public final static String FACE_API_URI = "http://api.open.tuputech.com/v3/recognition/face/verify/";
+
         //语音识别流接口
         public final static String SPEECH_API_URI = "http://api.open.tuputech.com/v3/recognition/speech/stream/";
 

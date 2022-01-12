@@ -78,10 +78,7 @@ public class TextApi {
 
         if (classificationResult.getResultCode() == 200) {
             String result = classificationResult.getResult();
-            // 判断当前字符串的编码格式
-            if (result.equals(new String(result.getBytes("iso8859-1"), "iso8859-1"))) {
-                result = new String(result.getBytes("iso8859-1"), "utf-8");
-            }
+
             JSONObject jsonObject = JSONObject.fromObject(result);
 
             String result_json = jsonObject.getString("json");
