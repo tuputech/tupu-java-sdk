@@ -53,8 +53,8 @@ public class Api {
         if (fileLists == null || fileLists.isEmpty()) {
             return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
         }
-        String timestamp = Math.round(System.currentTimeMillis() / 1000.0) + "";
-        String nonce = Math.random() + "";
+        String timestamp = String.valueOf(Math.round(System.currentTimeMillis() / 1000.0));
+        String  nonce = String.valueOf(Math.random());
         String sign_string = secretId + "," + timestamp + "," + nonce;
 
         String signature = SignatureAndVerifyUtil.Signature(privateKey, sign_string);

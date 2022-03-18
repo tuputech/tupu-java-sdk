@@ -49,17 +49,16 @@ public class VideoSyncApi {
         if (video == null) {
             return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
         }
-        long timestamp = Math.round(System.currentTimeMillis() / 1000.0);
-        double nonce = Math.random();
+        String timestamp = String.valueOf(Math.round(System.currentTimeMillis() / 1000.0));
+        String  nonce = String.valueOf(Math.random());
         String sign_string = secretId + "," + timestamp + "," + nonce;
-
         String signature = SignatureAndVerifyUtil.Signature(privateKey, sign_string);
 
         ClassificationResult classificationResult = null;
 
         try {
             // 返回网络请求数据
-            classificationResult = HttpConnectionUtil.uploadVideo(url, String.valueOf(timestamp), String.valueOf(nonce), signature, video,
+            classificationResult = HttpConnectionUtil.uploadVideo(url, timestamp, nonce, signature, video,
                     options);
 
             return getResult(classificationResult);

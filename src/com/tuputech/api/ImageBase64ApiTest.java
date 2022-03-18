@@ -14,7 +14,7 @@ public class ImageBase64ApiTest {
         String privateKey = "";
         // request Url
         String requestUrl = ConfigUtil.NET_WORK.IMAGE_BASE64_URL;
-        String imageUrl="/Users/soap/Downloads/test.jpg";
+        String imageUrl="";
         ImageBase64 imageBase64 = new ImageBase64();
 
         String imgBase64Str= ImageBase64Converter.convertFileToBase64(imageUrl);

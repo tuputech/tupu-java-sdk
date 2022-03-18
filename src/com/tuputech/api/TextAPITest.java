@@ -20,11 +20,10 @@ public class TextAPITest {
         ArrayList<Text> textArrayList = new ArrayList<>(10);
 
         Text text = new Text();
-        Text text2 = new Text();
 
         //带检测的文本内容，可以为词语或句子，必传
-        text.setContent("东方红，太阳升，中国出来个毛泽东");
-        text2.setContent("中国出来个毛泽东");
+        text.setContent("أمك ليس لديها مؤخرة\n");
+
 
         //客户自定义信息，方便根据该id找到相关的文本,建议可设置为secretId + 当前时间 + 随机数，参考请求示例 可虚线
         text.setContentId("");
@@ -34,7 +33,6 @@ public class TextAPITest {
         text.setForumId("");
 
         textArrayList.add(text);
-        textArrayList.add(text2);
 
 
         TextApi api = new TextApi(secretId, privateKey, textApiUrl);

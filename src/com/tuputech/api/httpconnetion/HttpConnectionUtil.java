@@ -1,6 +1,5 @@
 package com.tuputech.api.httpconnetion;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -17,8 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-import com.sun.javafx.tools.packager.Log;
-import com.tuputech.api.httpconnetion.model.SpeechRequest;
 import com.tuputech.api.model.*;
 import com.tuputech.api.util.ConfigUtil;
 import net.sf.json.JSONArray;
@@ -239,7 +236,7 @@ public class HttpConnectionUtil {
      * @param fileLists 文件url 列表
      * @return
      */
-    public static ClassificationResult uploadSpeechUri(String actionUrl, long timestamp, double nonce, String signature,
+    public static ClassificationResult uploadSpeechUri(String actionUrl, String timestamp, String nonce, String signature,
                                                        ArrayList<SpeechStream> fileLists, Options options) throws Exception {
         BufferedReader reader = null;
         StringBuffer sbf = new StringBuffer();

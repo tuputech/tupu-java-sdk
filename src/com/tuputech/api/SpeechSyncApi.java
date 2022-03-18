@@ -44,8 +44,8 @@ public class SpeechSyncApi {
         if (speech == null || speech.length == 0) {
             return ErrorUtil.getErrorMsg(ErrorUtil.ERROR_CODE_NO_FILE, "");
         }
-        long timestamp = Math.round(System.currentTimeMillis() / 1000.0);
-        double nonce = Math.random();
+        String timestamp = String.valueOf(Math.round(System.currentTimeMillis() / 1000.0));
+        String  nonce = String.valueOf(Math.random());
         String sign_string = secretId + "," + timestamp + "," + nonce;
 
         String signature = SignatureAndVerifyUtil.Signature(privateKey, sign_string);
@@ -54,7 +54,7 @@ public class SpeechSyncApi {
 
         try {
             // 返回网络请求数据
-            classificationResult = SpeechHttpConnectionUtil.uploadSpeechSync(url, String.valueOf(timestamp), String.valueOf(nonce), signature, speech, taskId, speechType);
+            classificationResult = SpeechHttpConnectionUtil.uploadSpeechSync(url, timestamp, nonce, signature, speech, taskId, speechType);
 
             return getResult(classificationResult);
         } catch (Exception e) {

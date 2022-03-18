@@ -18,25 +18,23 @@ public class ImageApiTest {
         String requestUrl = ConfigUtil.NET_WORK.API_URI;
         // fileList imageFile or url
         ArrayList<String> fileLists = new ArrayList<String>();
-         fileLists.add("../test.jpg");
 
-        // fileLists.add("../test2.jpg");
+        fileLists.add("");
+
 
         // options
-        String tags[] = { "tag1", "tag2" };
-        //指定运行的任务 ID 列表
-        String tasks[] = { "taskId1", "taskId2" };
+        String tags[] = { "", "" };
+
 
         Options options = new Options();
         options.setTags(tags);
-        options.setTasks(tasks);
 
         // http timeout config
         options.setConnectTimeout(16000);
         options.setReadTimeout(16000);
 
         Api api = new Api(secretId, privateKey, requestUrl);
-        JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_IMAGE_TYPE, fileLists, options);
+        JSONObject result = api.doApiTest(ConfigUtil.UPLOAD_TYPE.UPLOAD_URI_TYPE, fileLists, options);
 
         System.out.println(result);
     }

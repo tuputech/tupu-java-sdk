@@ -1,14 +1,11 @@
 package com.tuputech.api.httpconnetion;
 
 import com.tuputech.api.model.*;
-import com.tuputech.api.util.ConfigUtil;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
