@@ -10,7 +10,6 @@
 ###账户申请,证书下载
 
 - 请联系图普售前/客户支持，明确需求，以便申请账户、申请开通 secretId；
-- 登录后，<a href="https://www.tuputech.com/account/cert">参考此说明</a>生成并上传公钥；
 
 ###目录介绍
 
