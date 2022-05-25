@@ -80,6 +80,12 @@ public class ConfigUtil {
 
 //        public final static String SPEECH_ASYNC_RESULT_API_ABROAD_URI = "http://api.speech.tuputech.com/v3/recognition/speech/recording/async/";
 
+        //查询并发及待处理任务数
+        public final static String RATE_API = "http://api.video.tuputech.com/v3/recognition/video/rate/";
+        public final static String RATE_OVERSEA_API = "http://api-us.open.tuputech.com/v3/recognition/video/rate/";
+        //查询并发及待处理任务数 (异步)
+        public final static String RATE_ASYNC_API  ="http://api.speech.tuputech.com/v3/recognition/speech/recording/async/rate/";
+
     }
 
     /**
