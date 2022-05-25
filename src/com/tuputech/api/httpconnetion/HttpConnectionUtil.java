@@ -642,6 +642,84 @@ public class HttpConnectionUtil {
 
 
     /**
+     * 获取视频结果
+     */
+    public static ClassificationResult getVideoResultAsync(String actionUrl, String timestamp, String nonce, String signature,
+                                                       String videoId) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+
+
+        requestJson.put("videoId", videoId);
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
+
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
+    /**
+     * 获取视频结果
+     */
+    public static ClassificationResult getSpeechResult(String actionUrl, String timestamp, String nonce, String signature,
+                                                           String requestId) throws Exception {
+        BufferedReader reader = null;
+        StringBuffer sbf = new StringBuffer();
+        JSONObject requestJson = new JSONObject();
+
+
+        requestJson.put("requestId", requestId);
+        requestJson.put("nonce", nonce);
+        requestJson.put("signature", signature);
+        requestJson.put("timestamp", timestamp);
+
+        URL connect_url = new URL(actionUrl);
+        HttpURLConnection connection = (HttpURLConnection) connect_url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("accept", "*/*");
+        connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("user-agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.getOutputStream().write(requestJson.toString().getBytes("UTF-8"));
+        connection.connect();
+        InputStream is = connection.getInputStream();
+        reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String strRead = null;
+        while ((strRead = reader.readLine()) != null) {
+            sbf.append(strRead);
+            sbf.append("\r\n");
+        }
+        reader.close();
+        return new ClassificationResult(connection.getResponseCode(), sbf.toString());
+    }
+
+    /**
      * base64 Image测试
      *
      * @param actionUrl 请求路径

@@ -12,7 +12,7 @@ public class TextAPITest {
         // secret id
         String secretId = "";
         // private KEY path 以 .pem 结尾的话，当做密钥文件，其它字符串当做密钥内容处理
-        String privateKey = "";
+        String privateKey = "pem/pkcs8_private_key_zp.pem";
         // request Url
         String textApiUrl = ConfigUtil.NET_WORK.TEXT_API_URI;
 
@@ -26,11 +26,11 @@ public class TextAPITest {
 
 
         //客户自定义信息，方便根据该id找到相关的文本,建议可设置为secretId + 当前时间 + 随机数，参考请求示例 可虚线
-        text.setContentId("");
-        //用户Id 可选
-        text.setUserId("");
-        //板块Id 可选
-        text.setForumId("");
+//        text.setContentId("");
+//        //用户Id 可选
+//        text.setUserId("");
+//        //板块Id 可选
+//        text.setForumId("");
 
         textArrayList.add(text);
 

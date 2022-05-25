@@ -69,6 +69,17 @@ public class ConfigUtil {
 
         //同步语音识别接口
         public final static String SPEECH_ASYNC_API_URI = "http://api.speech.tuputech.com/v3/recognition/speech/recording/async/";
+
+        //获取异步视频结果
+        public final static String VIDEO_ASYNC_RESULT_API_URI = "http://api.video.tuputech.com/v3/recognition/video/result/";
+
+        public final static String VIDEO_ASYNC_RESULT_API_ABROAD_URI = "http://api-us.open.tuputech.com/v3/recognition/video/result/";
+
+        //获取异步语音结果
+        public final static String SPEECH_ASYNC_RESULT_API_URI = "http://api.speech.tuputech.com/v3/recognition/speech/recording/result/";
+
+//        public final static String SPEECH_ASYNC_RESULT_API_ABROAD_URI = "http://api.speech.tuputech.com/v3/recognition/speech/recording/async/";
+
     }
 
     /**
